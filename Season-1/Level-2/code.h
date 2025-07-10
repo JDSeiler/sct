@@ -76,6 +76,9 @@ bool update_setting(int user_id, const char *index, const char *value) {
     char *endptr;
     long i, v;
     i = strtol(index, &endptr, 10);
+    if (i < 0) {
+        return false;
+    }
     if (*endptr)
         return false;
 

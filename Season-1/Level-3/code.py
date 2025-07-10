@@ -13,6 +13,12 @@ def source():
     TaxPayer('foo', 'bar').get_prof_picture(request.args["input"])
 ### Unrelated to the exercise -- Ends here -- Please ignore
 
+def is_in_assets_dir(p):
+    absolute_p = os.path.abspath(p)
+    if absolute_p.startswith("/workspaces/sct/Season-1/Level-3/assets"):
+        return True
+    return False
+
 class TaxPayer:
 
     def __init__(self, username, password):
@@ -28,7 +34,7 @@ class TaxPayer:
             pass
 
         # defends against path traversal attacks
-        if path.startswith('/') or path.startswith('..'):
+        if not is_in_assets_dir(path):
             return None
 
         # builds path
@@ -47,6 +53,11 @@ class TaxPayer:
 
         if not path:
             raise Exception("Error: Tax form is required for all users")
+
+        if not is_in_assets_dir(path):
+            print('failing out')
+            return None
+
 
         with open(path, 'rb') as form:
             tax_data = bytearray(form.read())
